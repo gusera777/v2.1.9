@@ -24,6 +24,7 @@ import { setStatus, setModalStatus, setConn, fmtPrice } from './ui/dom-helpers.j
 import { drawGauge, drawChart } from './ui/charts.js';
 import { renderAll, historyRows } from './ui/render.js';
 import { updateProfilePanel } from './ui/profile.js';
+import { exportFullHistoryExcel } from './xlsx-export.js';
 import { notify } from './alerts.js';
 
 /* ═══════════════════════════════════════════════════════════
@@ -436,6 +437,25 @@ document.getElementById('resetHistoryBtn').onclick = ()=>{
 document.getElementById('profOpenSettingsBtn').onclick = ()=> overlay.classList.add('open');
 document.getElementById('profExportBtn').onclick = downloadHistoryCsv;
 document.getElementById('profResetHistoryBtn').onclick = ()=> document.getElementById('resetHistoryBtn').click();
+document.getElementById('profExportExcelBtn').onclick = async ()=>{
+  const btn = document.getElementById('profExportExcelBtn');
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Menyiapkan file…';
+  try{
+    const res = await exportFullHistoryExcel();
+    if(!res.ok){
+      toast(res.reason==='empty'
+        ? 'Belum ada riwayat sinyal tersimpan untuk diunduh.'
+        : 'Gagal memuat modul Excel — cek koneksi internet lalu coba lagi.');
+    }else{
+      toast('Excel diunduh ('+res.total+' sinyal tersimpan, semua pair & timeframe).');
+    }
+  }finally{
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+};
 updateProfilePanel(null);
 /* ═══════════════════════════════════════════════════════════
    BOTTOM NAV
