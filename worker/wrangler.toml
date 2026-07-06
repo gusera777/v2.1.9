@@ -1,0 +1,22 @@
+name = "gusera-sats-proxy"
+main = "index.js"
+compatibility_date = "2026-01-01"
+
+# ── Opsional: KV untuk mengingat key mana yang terakhir terbukti jalan LINTAS
+# request (tanpa ini, Worker tetap 100% berfungsi — cuma tiap request baru mulai
+# coba dari key #0 dulu, bukan soal besar untuk trafik ringan seperti aplikasi ini).
+# Buat namespace-nya dulu: `wrangler kv namespace create KEY_INDEX_KV`
+# lalu isi `id` di bawah dengan id yang dikeluarkan, dan hapus tanda pagar (#).
+#
+# [[kv_namespaces]]
+# binding = "KEY_INDEX_KV"
+# id = "ISI_DENGAN_ID_DARI_WRANGLER"
+
+# ── Opsional: batasi CORS hanya ke domain GitHub Pages Anda (default "*" kalau
+# tidak diisi — aman karena data yang dikembalikan bukan data sensitif per-user).
+# [vars]
+# ALLOWED_ORIGIN = "https://gusera777.github.io/SATS-V1.3.0/"
+
+# Secret (TWELVEDATA_API_KEYS) TIDAK ditaruh di sini — itu di-set lewat:
+#   wrangler secret put TWELVEDATA_API_KEYS
+# supaya tidak pernah masuk ke source control.
