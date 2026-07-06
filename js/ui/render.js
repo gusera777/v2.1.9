@@ -119,6 +119,17 @@ export function renderAll(res, candles){
       confirmTag.textContent = `Menunggu ${needTxt} untuk ${dirTxt}`;
       confirmTag.className = 'trendTag';
       confirmTag.style.background = ''; confirmTag.style.color = '#C89B3C'; confirmTag.style.border = '1px solid #C89B3C';
+    } else if(res.openTrade){
+      // BUG FIX: sebelumnya begitu sinyal terkonfirmasi & posisi terbuka (pendingSignal
+      // sudah di-null-kan oleh openTrade()), widget ini langsung "lompat" ke status kosong
+      // 'Tidak Ada Sinyal Menunggu' — padahal yang sebenarnya terjadi justru sebaliknya:
+      // konfirmasi SUDAH berhasil dan posisi sedang aktif. Dari sudut pandang user ini
+      // terlihat seperti fitur tidak berfungsi (selalu kosong walau ada entry aktif di
+      // kartu Posisi Aktif & pola candlestick di Riwayat Sinyal), padahal cuma soal label.
+      const dirTxt = res.openTrade.dir===1 ? 'BUY' : 'SELL';
+      confirmTag.textContent = `Sudah Dikonfirmasi (${dirTxt}) — Posisi Aktif`;
+      confirmTag.className = 'trendTag '+(res.openTrade.dir===1?'bull':'bear');
+      confirmTag.style.background = ''; confirmTag.style.color = ''; confirmTag.style.border = '';
     } else {
       confirmTag.textContent = 'Tidak Ada Sinyal Menunggu';
       confirmTag.className = 'trendTag';
